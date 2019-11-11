@@ -81,7 +81,7 @@ final class MochaEngine extends ArcanistUnitTestEngine {
             }
         }
 
-        if ($this->getEnableCoverage() !== false) {
+        if (false) {
             // Remove coverage report if it already exists
             if (file_exists($cover_xml_path)) {
                 if(!unlink($cover_xml_path)) {
@@ -129,20 +129,16 @@ final class MochaEngine extends ArcanistUnitTestEngine {
         $include_opts = '';
         if ($this->testIncludes != null) {
             foreach ($this->testIncludes as $include_glob) {
-                $include_opts .= ' ' . escapeshellarg($include_glob);
+                $include_opts .= ' ' . $include_glob;
             }
         }
         
-        return new ExecFuture('%C cover %s ' .
-                              '--report clover ' .
-                              '--dir %s ' .
+        return new ExecFuture('%C ' .
                               '--default-excludes ' .
                               '--include-all-sources ' .
                               '%C ' .
                               '%C ',
-                              $this->istanbulBin,
                               $this->_mochaBin,
-                              $this->coverReportDir,
                               $exclude_opts,
                               $include_opts);
     }
@@ -150,7 +146,7 @@ final class MochaEngine extends ArcanistUnitTestEngine {
     protected function parseTestResults($xunit_tmp, $cover_xml_path) {
         $results = $this->parser->parseTestResults(Filesystem::readFile($xunit_tmp));
 
-        if ($this->getEnableCoverage() !== false) {
+        if (false) {
             $coverage_report = $this->readCoverage($cover_xml_path);
             foreach($results as $result) {
                 $result->setCoverage($coverage_report);
